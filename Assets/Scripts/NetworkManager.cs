@@ -6,6 +6,7 @@ using Photon.Pun;
 using WebSocketSharp;
 using System;
 using UnityEngine.UIElements;
+using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -21,6 +22,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     
     [Header("Create Room Panel")]
     public GameObject CreateRoom_UI_Panel;
+    public InputField RoomNameInputField;
+    public InputField MaxPlayerInputField;
     
     [Header("Inside Room Panel")]
     public GameObject InsideRoom_UI_Panel;
@@ -60,6 +63,23 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             Debug.Log("playerName is invalid!");
         }
     }
+
+    public void OnRoomCreateButtonClicked()
+    {
+        string roomName = RoomNameInputField.text;
+        if(String.IsNullOrEmpty(roomName))
+        {
+            roomName = "Room " + UnityEngine.Random.Range(1000,10000);
+        }
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = (byte)int.Parse(MaxPlayerInputField.text);
+
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
+    }
+    public void OnCancelButtonClicked()
+    {
+        ActivatePanel(GameOptions_UI_Panel.name);
+    }
     #endregion
 
     #region Photon Callbacks
@@ -72,6 +92,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is Connected to Photon");
         ActivatePanel(GameOptions_UI_Panel.name);
+    }
+    public override void OnCreatedRoom()
+    {
+        Debug.Log(PhotonNetwork.CurrentRoom.Name + " is created.");
+    }
+    public override void OnJoinedRoom()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
+        ActivatePanel(InsideRoom_UI_Panel.name);
     }
     #endregion
 

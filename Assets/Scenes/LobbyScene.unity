@@ -1747,9 +1747,11 @@ MonoBehaviour:
   Login_UI_Panel: {fileID: 1898342735}
   GameOptions_UI_Panel: {fileID: 1897633495}
   CreateRoom_UI_Panel: {fileID: 274552716}
+  RoomNameInputField: {fileID: 460123711}
+  MaxPlayerInputField: {fileID: 217544445}
   InsideRoom_UI_Panel: {fileID: 1760134789}
-  JoinRandomRoom_UI_Panel: {fileID: 1438516555}
   RoomList_UI_Panel: {fileID: 2010485768}
+  JoinRandomRoom_UI_Panel: {fileID: 1438516555}
 --- !u!4 &535296672
 Transform:
   m_ObjectHideFlags: 0
@@ -1869,9 +1871,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 535296671}
+        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+        m_MethodName: OnCancelButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3413,9 +3415,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: OnCreateRoomButtonClicked
+      - m_Target: {fileID: 535296671}
+        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+        m_MethodName: OnRoomCreateButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
