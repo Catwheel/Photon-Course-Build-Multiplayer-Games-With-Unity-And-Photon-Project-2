@@ -7,6 +7,7 @@ using WebSocketSharp;
 using System;
 using UnityEngine.UIElements;
 using Photon.Realtime;
+using System.Linq.Expressions;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -33,12 +34,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [Header("Join Random RoomPanel")]
     public GameObject JoinRandomRoom_UI_Panel;
-
+    private Dictionary<string,RoomInfo> catchedRoomList;
     #region Unity Methods
     // Start is called before the first frame update
     void Start()
     {
         ActivatePanel(Login_UI_Panel.name);
+
+        catchedRoomList = new Dictionary<string, RoomInfo>();
     }
 
     // Update is called once per frame
@@ -80,6 +83,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         ActivatePanel(GameOptions_UI_Panel.name);
     }
+
+    public void OnShowRoomButtonsClicked()
+    {
+        if(!PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.JoinLobby();
+        }
+        ActivatePanel(RoomList_UI_Panel.name);
+
+    }
     #endregion
 
     #region Photon Callbacks
@@ -101,6 +114,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
         ActivatePanel(InsideRoom_UI_Panel.name);
+    }
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach(RoomInfo room in roomList)
+        {
+            Debug.Log(room.Name);
+            if(!room.IsOpen || !room.IsVisible || room.RemovedFromList)
+            {
+                if(catchedRoomList.ContainsKey(room.Name))
+                {
+                    catchedRoomList.Remove(room.Name);
+                }
+            }
+            catchedRoomList.Add(room.Name, room);
+        }
     }
     #endregion
 
