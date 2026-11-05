@@ -31,10 +31,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [Header("Room List Panel")]
     public GameObject RoomList_UI_Panel;
+    public GameObject roomListEntryPrefab;
+    public GameObject roomListParentGameObject;
 
     [Header("Join Random RoomPanel")]
     public GameObject JoinRandomRoom_UI_Panel;
     private Dictionary<string,RoomInfo> catchedRoomList;
+    private Dictionary<string, GameObject> roomListGameObjects;
     #region Unity Methods
     // Start is called before the first frame update
     void Start()
@@ -42,6 +45,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ActivatePanel(Login_UI_Panel.name);
 
         catchedRoomList = new Dictionary<string, RoomInfo>();
+        roomListGameObjects = new Dictionary<string, GameObject>();
     }
 
     // Update is called once per frame
@@ -117,6 +121,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        ClearRoomList();
         foreach(RoomInfo room in roomList)
         {
             Debug.Log(room.Name);
@@ -127,8 +132,45 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                     catchedRoomList.Remove(room.Name);
                 }
             }
-            catchedRoomList.Add(room.Name, room);
+            else
+            {
+                if(catchedRoomList.ContainsKey(room.Name))
+                {
+                    catchedRoomList[room.Name]= room;
+                }
+                else
+                    catchedRoomList.Add(room.Name, room);
+            }
         }
+        foreach(RoomInfo room in catchedRoomList.Values)
+        {
+            GameObject roomListEntryGameObject = Instantiate(roomListEntryPrefab);
+            roomListEntryGameObject.transform.SetParent(roomListParentGameObject.transform);
+            roomListEntryGameObject.transform.localScale = Vector3.one;
+            roomListEntryGameObject.transform.Find("RoomNameText").GetComponent<Text>().text = room.Name;
+            roomListEntryGameObject.transform.Find("RoomPlayersText").GetComponent<Text>().text = room.PlayerCount + " / " + room.MaxPlayers;
+            roomListEntryGameObject.transform.Find("JoinRoomButton").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => OnJoinRoomButtonClicked(room.Name));
+            roomListGameObjects.Add(room.Name, roomListEntryGameObject);
+        }
+    }
+    #endregion
+
+    #region  Private Methods
+    void OnJoinRoomButtonClicked(string _roomName)
+    {
+        if(PhotonNetwork.InLobby)
+            PhotonNetwork.LeaveLobby();
+        PhotonNetwork.JoinRoom(_roomName);
+        
+    }
+
+    void ClearRoomList()
+    {
+        foreach(var roomListGameObject in roomListGameObjects.Values)
+        {
+            Destroy(roomListGameObject);
+        }
+        roomListGameObjects.Clear();
     }
     #endregion
 
