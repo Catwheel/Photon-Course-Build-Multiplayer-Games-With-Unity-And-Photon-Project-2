@@ -97,6 +97,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ActivatePanel(RoomList_UI_Panel.name);
 
     }
+
+    public void OnBackButtonClicked()
+    {
+        if(PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+        ActivatePanel(GameOptions_UI_Panel.name);
+    }
     #endregion
 
     #region Photon Callbacks
@@ -152,6 +161,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             roomListEntryGameObject.transform.Find("JoinRoomButton").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => OnJoinRoomButtonClicked(room.Name));
             roomListGameObjects.Add(room.Name, roomListEntryGameObject);
         }
+    }
+    public override void OnLeftLobby()
+    {
+        ClearRoomList();
+        catchedRoomList.Clear();
     }
     #endregion
 
