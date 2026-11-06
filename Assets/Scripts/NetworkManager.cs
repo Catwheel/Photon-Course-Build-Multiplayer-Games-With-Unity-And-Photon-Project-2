@@ -28,6 +28,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     
     [Header("Inside Room Panel")]
     public GameObject InsideRoom_UI_Panel;
+    public Text roomInfoText;
+    public GameObject playerListPrefab;
+    public GameObject playerListContent;
 
     [Header("Room List Panel")]
     public GameObject RoomList_UI_Panel;
@@ -127,6 +130,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
         ActivatePanel(InsideRoom_UI_Panel.name);
+        roomInfoText.text = "Room name: " + PhotonNetwork.CurrentRoom.Name + " Players/MaxPlayers:" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers;
+        
+        foreach(Player player in PhotonNetwork.PlayerList)
+        {
+            GameObject playerListGameObject = Instantiate(playerListPrefab);
+            playerListGameObject.transform.SetParent(playerListContent.transform);
+            playerListGameObject.transform.localScale = Vector3.one;
+
+            playerListGameObject.transform.Find("PlayerNameText").GetComponent<Text>().text = player.NickName;
+            if(player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
+            }
+            else
+            {
+                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
+            }
+        }
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
