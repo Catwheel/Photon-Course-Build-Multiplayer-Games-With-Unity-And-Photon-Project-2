@@ -1134,8 +1134,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 535296671}
+        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
         m_MethodName: OnLeaveGameButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -1753,6 +1753,7 @@ MonoBehaviour:
   roomInfoText: {fileID: 873426530}
   playerListPrefab: {fileID: 1252797748048109091, guid: 5dc44bfa7a0d258489acbcd2b912d338, type: 3}
   playerListContent: {fileID: 1396198818}
+  StartGameButton: {fileID: 503160507}
   RoomList_UI_Panel: {fileID: 2010485768}
   roomListEntryPrefab: {fileID: 841278376669109242, guid: 1b50ba566761f6c42bf8b3c775911a8d, type: 3}
   roomListParentGameObject: {fileID: 505941761}
@@ -2190,8 +2191,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 535296671}
         m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
-        m_MethodName: ActivatePanel
-        m_Mode: 5
+        m_MethodName: OnJoinRandomRoomButtonClicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4031,7 +4032,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1438516556
 RectTransform:
   m_ObjectHideFlags: 0
