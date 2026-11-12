@@ -52,6 +52,8 @@ private Dictionary<int,GameObject> playerListGameObjects;
 
         catchedRoomList = new Dictionary<string, RoomInfo>();
         roomListGameObjects = new Dictionary<string, GameObject>();
+
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     // Update is called once per frame
@@ -122,6 +124,14 @@ private Dictionary<int,GameObject> playerListGameObjects;
     {
         ActivatePanel(JoinRandomRoom_UI_Panel.name);
         PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void OnStartGameButtonClicked()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("GameScene");
+        }
     }
     #endregion
 
